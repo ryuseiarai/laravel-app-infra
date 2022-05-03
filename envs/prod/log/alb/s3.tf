@@ -18,7 +18,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "this" {
 resource "aws_s3_bucket_lifecycle_configuration" "this" {
   bucket = aws_s3_bucket.this.id
   rule {
-    id = "alb-log"
+    id     = "alb-log"
     status = "Enabled"
 
     expiration {
@@ -31,28 +31,28 @@ resource "aws_s3_bucket_policy" "name" {
   bucket = aws_s3_bucket.this.id
   policy = jsonencode(
     {
-      "Version": "2012-10-17",
-      "Statement": [
+      "Version" : "2012-10-17",
+      "Statement" : [
         {
-          "Effect": "Allow",
-          "Principal": {
-            "AWS": "arn:aws:iam::${data.aws_elb_service_account.current.id}:root"
+          "Effect" : "Allow",
+          "Principal" : {
+            "AWS" : "arn:aws:iam::${data.aws_elb_service_account.current.id}:root"
           },
-          "Action": "s3:PutObject",
-          "Resource": "${aws_s3_bucket.this.arn}/*",
-          "Condition": {
-            "StringEquals": {
-              "s3:x-amz-acl": "bucket-owner-full-control"
+          "Action" : "s3:PutObject",
+          "Resource" : "${aws_s3_bucket.this.arn}/*",
+          "Condition" : {
+            "StringEquals" : {
+              "s3:x-amz-acl" : "bucket-owner-full-control"
             }
           }
         },
         {
-          "Effect": "Allow",
-          "Principal": {
-            "Service": "delivery.logs.amazonaws.com"
+          "Effect" : "Allow",
+          "Principal" : {
+            "Service" : "delivery.logs.amazonaws.com"
           },
-          "Action": "s3:GetBucketAcl",
-          "Resource": aws_s3_bucket.this.arn
+          "Action" : "s3:GetBucketAcl",
+          "Resource" : aws_s3_bucket.this.arn
         }
       ]
     }
